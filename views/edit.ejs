@@ -1,5 +1,5 @@
 <% include partials/header %>
-
+<div class="ui main text container segment">
 
   <div class="ui huge header">Edit '<%=curBlog.title%>'</div>
   <form action="/blogs/<%= curBlog._id %>?_method=PUT" method="POST" class = "ui form">

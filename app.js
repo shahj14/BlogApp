@@ -3,12 +3,14 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var methodOverride = require("method-override");
+var expressSanitizer = require("express-sanitizer");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 mongoose.connect("mongodb://localhost/rest_blog");
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 
 var blogSchema = new mongoose.Schema({
   title: String,
@@ -47,6 +49,7 @@ app.get("/blogs/new", function(req,res){
 })
 //CREATE
 app.post("/blogs", function(req,res){
+  req.body.blog.body = req.sanitize(req.body.blog.body);
   Blog.create(req.body.blog, function(err,newBlog){
     if(err){
       res.render("new");
@@ -92,7 +95,7 @@ app.delete("/blogs/:id",function(req,res){
     if(err){
       console.log(err);
     }else{
-      res.redirect("/");
+      res.redirect("/blogs");
     }
   })
 })
